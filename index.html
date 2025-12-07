@@ -3,323 +3,822 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой сайт для общения</title>
+    <title>Система управления планами</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #333;
-            min-height: 100vh;
         }
-        
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #adb5bd;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
         }
-        
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         h1 {
-            color: #2575fc;
-            margin-bottom: 1rem;
             font-size: 2.5rem;
+            margin-bottom: 5px;
         }
-        
+
         .subtitle {
-            color: #666;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
-        
+
+        .user-info {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
         }
-        
-        @media (max-width: 768px) {
+
+        @media (max-width: 992px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
         }
-        
-        .form-section, .messages-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
         }
-        
-        h2 {
-            color: #2575fc;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #eee;
+
+        .card:hover {
+            transform: translateY(-5px);
         }
-        
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.3rem;
+        }
+
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
         }
-        
+
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
+            margin-bottom: 8px;
             font-weight: 600;
+            color: var(--dark-color);
         }
-        
-        input, textarea {
+
+        input, select, textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
             transition: border-color 0.3s;
         }
-        
-        input:focus, textarea:focus {
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #2575fc;
+            border-color: var(--primary-color);
         }
-        
-        button {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 15px 30px;
             border-radius: 10px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
         }
-        
-        button:hover {
+
+        .btn:hover {
+            background-color: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
         }
-        
-        .message {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+
+        .btn-block {
+            width: 100%;
+            display: block;
+        }
+
+        .plans-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .plan-item {
+            background-color: var(--light-color);
             border-radius: 10px;
-            border-left: 5px solid #2575fc;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s;
         }
-        
-        .message-header {
+
+        .plan-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .plan-item.high-priority {
+            border-left-color: var(--warning-color);
+        }
+
+        .plan-item.medium-priority {
+            border-left-color: #ff9e00;
+        }
+
+        .plan-item.completed {
+            opacity: 0.8;
+            border-left-color: var(--success-color);
+        }
+
+        .plan-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            align-items: center;
+            margin-bottom: 10px;
         }
-        
-        .message-author {
-            font-weight: bold;
-            color: #2575fc;
+
+        .plan-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--dark-color);
         }
-        
-        .message-time {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        .message-text {
-            color: #333;
-        }
-        
-        footer {
-            text-align: center;
-            color: white;
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .online-counter {
-            background: rgba(255, 255, 255, 0.2);
-            display: inline-block;
-            padding: 10px 20px;
+
+        .plan-priority {
+            padding: 5px 10px;
             border-radius: 20px;
-            margin-top: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background-color: rgba(247, 37, 133, 0.2);
+            color: var(--warning-color);
+        }
+
+        .priority-medium {
+            background-color: rgba(255, 158, 0, 0.2);
+            color: #cc7a00;
+        }
+
+        .priority-low {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--success-color);
+        }
+
+        .plan-author {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-top: 5px;
+        }
+
+        .plan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .plan-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-completed {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-active {
+            background-color: rgba(67, 97, 238, 0.2);
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        .empty-plans {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-color);
+        }
+
+        .empty-plans i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        .users-online {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .plan-dates {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🌐 Добро пожаловать!</h1>
-            <p class="subtitle">Общайтесь, делитесь мыслями и находите новых друзей</p>
-        </header>
-        
-        <div class="main-content">
-            <section class="form-section">
-                <h2>✍️ Отправить сообщение</h2>
-                <form id="messageForm">
-                    <div class="form-group">
-                        <label for="name">Ваше имя:</label>
-                        <input type="text" id="name" placeholder="Введите ваше имя" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Ваш email:</label>
-                        <input type="email" id="email" placeholder="example@mail.com" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message">Сообщение:</label>
-                        <textarea id="message" rows="5" placeholder="Напишите ваше сообщение здесь..." required></textarea>
-                    </div>
-                    
-                    <button type="submit">Отправить сообщение</button>
-                </form>
-            </section>
-            
-            <section class="messages-section">
-                <h2>💬 Последние сообщения</h2>
-                <div id="messagesContainer">
-                    <!-- Сообщения будут добавляться здесь -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1><i class="fas fa-tasks"></i> Система управления планами</h1>
+                    <p class="subtitle">Создавайте, редактируйте и отслеживайте планы вместе с командой</p>
                 </div>
-            </section>
-        </div>
-        
-        <footer>
-            <p>© 2024 Мой сайт для общения. Все права защищены.</p>
-            <div class="online-counter">
-                👥 Сейчас онлайн: <span id="onlineCount">1</span> человек
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> Вы: <span id="current-user">Алексей</span>
+                </div>
             </div>
-        </footer>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="left-column">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-plus-circle"></i> Добавить новый план</h2>
+                    <form id="plan-form">
+                        <div class="form-group">
+                            <label for="plan-title"><i class="fas fa-heading"></i> Название плана</label>
+                            <input type="text" id="plan-title" placeholder="Например: Завершить проект" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plan-description"><i class="fas fa-align-left"></i> Описание</label>
+                            <textarea id="plan-description" placeholder="Подробное описание плана..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plan-priority"><i class="fas fa-exclamation-circle"></i> Приоритет</label>
+                            <select id="plan-priority">
+                                <option value="low">Низкий</option>
+                                <option value="medium" selected>Средний</option>
+                                <option value="high">Высокий</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plan-deadline"><i class="fas fa-calendar-alt"></i> Срок выполнения</label>
+                            <input type="date" id="plan-deadline" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plan-author"><i class="fas fa-user-edit"></i> Автор</label>
+                            <input type="text" id="plan-author" value="Алексей" required>
+                        </div>
+                        
+                        <input type="hidden" id="plan-id" value="">
+                        
+                        <button type="submit" class="btn btn-block" id="submit-btn">
+                            <i class="fas fa-plus"></i> Добавить план
+                        </button>
+                        
+                        <button type="button" class="btn btn-success btn-block" id="update-btn" style="display: none;">
+                            <i class="fas fa-save"></i> Сохранить изменения
+                        </button>
+                        
+                        <button type="button" class="btn btn-warning btn-block" id="cancel-btn" style="display: none; margin-top: 10px;">
+                            <i class="fas fa-times"></i> Отменить редактирование
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-users"></i> Пользователи онлайн</h2>
+                    <div class="users-online">
+                        <div class="user-avatar">А</div>
+                        <div class="user-avatar">М</div>
+                        <div class="user-avatar">И</div>
+                        <div class="user-avatar">К</div>
+                        <div class="user-avatar">Е</div>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> Все пользователи видят изменения в реальном времени
+                    </p>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-list"></i> Все планы
+                        <div style="margin-left: auto; font-size: 1rem;">
+                            <span id="plans-count">0</span> планов
+                        </div>
+                    </div>
+                    
+                    <div class="filter-options">
+                        <button class="btn" id="filter-all">Все</button>
+                        <button class="btn" id="filter-active">Активные</button>
+                        <button class="btn" id="filter-completed">Завершенные</button>
+                        <button class="btn" id="filter-high">Высокий приоритет</button>
+                    </div>
+                    
+                    <div class="plans-list" id="plans-list">
+                        <!-- Планы будут добавляться здесь -->
+                        <div class="empty-plans">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Планов пока нет</h3>
+                            <p>Добавьте первый план, используя форму слева</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="container">
+            <p>Система управления планами &copy; 2023 | Все изменения видны всем пользователям в реальном времени</p>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <span id="notification-text">План успешно добавлен!</span>
     </div>
 
     <script>
-        // Имитация базы данных в localStorage
-        const STORAGE_KEY = 'site_messages';
+        // Текущий пользователь
+        const currentUser = "Алексей";
+        document.getElementById('current-user').textContent = currentUser;
         
-        // Загружаем сообщения при загрузке страницы
+        // Устанавливаем дату по умолчанию (завтра)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('plan-deadline').value = tomorrow.toISOString().split('T')[0];
+        
+        // Массив для хранения планов (в реальном приложении это было бы на сервере)
+        let plans = JSON.parse(localStorage.getItem('plans')) || [];
+        let editingPlanId = null;
+        
+        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
-            loadMessages();
-            updateOnlineCounter();
-            
-            // Обновляем счетчик каждые 30 секунд
-            setInterval(updateOnlineCounter, 30000);
+            updatePlansList();
+            setupEventListeners();
         });
         
-        // Обработка формы
-        document.getElementById('messageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Форма добавления/редактирования плана
+            document.getElementById('plan-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addOrUpdatePlan();
+            });
             
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+            // Кнопка обновления плана
+            document.getElementById('update-btn').addEventListener('click', addOrUpdatePlan);
             
-            if (name && email && message) {
-                addMessage(name, email, message);
+            // Кнопка отмены редактирования
+            document.getElementById('cancel-btn').addEventListener('click', cancelEdit);
+            
+            // Фильтры
+            document.getElementById('filter-all').addEventListener('click', () => filterPlans('all'));
+            document.getElementById('filter-active').addEventListener('click', () => filterPlans('active'));
+            document.getElementById('filter-completed').addEventListener('click', () => filterPlans('completed'));
+            document.getElementById('filter-high').addEventListener('click', () => filterPlans('high'));
+        }
+        
+        // Добавление или обновление плана
+        function addOrUpdatePlan() {
+            const title = document.getElementById('plan-title').value;
+            const description = document.getElementById('plan-description').value;
+            const priority = document.getElementById('plan-priority').value;
+            const deadline = document.getElementById('plan-deadline').value;
+            const author = document.getElementById('plan-author').value;
+            
+            if (editingPlanId !== null) {
+                // Обновление существующего плана
+                const planIndex = plans.findIndex(plan => plan.id === editingPlanId);
+                if (planIndex !== -1) {
+                    plans[planIndex] = {
+                        ...plans[planIndex],
+                        title,
+                        description,
+                        priority,
+                        deadline,
+                        author
+                    };
+                    
+                    showNotification('План успешно обновлен!');
+                }
+                editingPlanId = null;
+            } else {
+                // Добавление нового плана
+                const newPlan = {
+                    id: Date.now(),
+                    title,
+                    description,
+                    priority,
+                    deadline,
+                    author,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
                 
-                // Очищаем форму
-                document.getElementById('messageForm').reset();
-                
-                // Показываем уведомление
-                alert('Сообщение успешно отправлено!');
+                plans.unshift(newPlan);
+                showNotification('План успешно добавлен!');
             }
-        });
-        
-        // Функция добавления сообщения
-        function addMessage(name, email, message) {
-            const messages = getMessages();
-            const newMessage = {
-                id: Date.now(),
-                name: name,
-                email: email,
-                message: message,
-                timestamp: new Date().toLocaleString('ru-RU'),
-                likes: 0
-            };
             
-            messages.unshift(newMessage); // Добавляем в начало
-            saveMessages(messages);
-            displayMessages();
+            // Сохраняем в localStorage (в реальном приложении отправляем на сервер)
+            localStorage.setItem('plans', JSON.stringify(plans));
+            
+            // Сбрасываем форму
+            resetForm();
+            
+            // Обновляем список планов
+            updatePlansList();
+            
+            // В реальном приложении здесь был бы вызов для обновления у других пользователей
+            simulateRealTimeUpdate();
         }
         
-        // Функция загрузки сообщений
-        function loadMessages() {
-            displayMessages();
+        // Редактирование плана
+        function editPlan(id) {
+            const plan = plans.find(plan => plan.id === id);
+            if (!plan) return;
+            
+            // Заполняем форму данными плана
+            document.getElementById('plan-title').value = plan.title;
+            document.getElementById('plan-description').value = plan.description;
+            document.getElementById('plan-priority').value = plan.priority;
+            document.getElementById('plan-deadline').value = plan.deadline;
+            document.getElementById('plan-author').value = plan.author;
+            document.getElementById('plan-id').value = plan.id;
+            
+            // Меняем кнопки
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('update-btn').style.display = 'block';
+            document.getElementById('cancel-btn').style.display = 'block';
+            
+            // Устанавливаем ID редактируемого плана
+            editingPlanId = id;
+            
+            // Прокручиваем к форме
+            document.querySelector('.left-column').scrollIntoView({ behavior: 'smooth' });
+            
+            showNotification('Редактирование плана');
         }
         
-        // Функция отображения сообщений
-        function displayMessages() {
-            const messages = getMessages();
-            const container = document.getElementById('messagesContainer');
+        // Удаление плана
+        function deletePlan(id) {
+            if (confirm('Вы уверены, что хотите удалить этот план?')) {
+                plans = plans.filter(plan => plan.id !== id);
+                localStorage.setItem('plans', JSON.stringify(plans));
+                updatePlansList();
+                showNotification('План удален');
+                
+                // В реальном приложении здесь был бы вызов для обновления у других пользователей
+                simulateRealTimeUpdate();
+            }
+        }
+        
+        // Переключение статуса выполнения плана
+        function togglePlanStatus(id) {
+            const planIndex = plans.findIndex(plan => plan.id === id);
+            if (planIndex === -1) return;
             
-            if (messages.length === 0) {
-                container.innerHTML = '<div class="message"><p>Пока нет сообщений. Будьте первым!</p></div>';
+            plans[planIndex].completed = !plans[planIndex].completed;
+            localStorage.setItem('plans', JSON.stringify(plans));
+            updatePlansList();
+            
+            const status = plans[planIndex].completed ? 'выполнен' : 'активен';
+            showNotification(`План отмечен как ${status}`);
+            
+            // В реальном приложении здесь был бы вызов для обновления у других пользователей
+            simulateRealTimeUpdate();
+        }
+        
+        // Сброс формы
+        function resetForm() {
+            document.getElementById('plan-form').reset();
+            document.getElementById('plan-author').value = currentUser;
+            document.getElementById('plan-id').value = '';
+            
+            // Устанавливаем дату по умолчанию (завтра)
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('plan-deadline').value = tomorrow.toISOString().split('T')[0];
+            
+            // Возвращаем кнопки в исходное состояние
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('update-btn').style.display = 'none';
+            document.getElementById('cancel-btn').style.display = 'none';
+            
+            editingPlanId = null;
+        }
+        
+        // Отмена редактирования
+        function cancelEdit() {
+            resetForm();
+            showNotification('Редактирование отменено');
+        }
+        
+        // Фильтрация планов
+        function filterPlans(filter) {
+            const planItems = document.querySelectorAll('.plan-item');
+            
+            planItems.forEach(item => {
+                let show = true;
+                
+                if (filter === 'active') {
+                    show = !item.classList.contains('completed');
+                } else if (filter === 'completed') {
+                    show = item.classList.contains('completed');
+                } else if (filter === 'high') {
+                    show = item.classList.contains('high-priority');
+                }
+                
+                item.style.display = show ? 'block' : 'none';
+            });
+            
+            // Обновляем активную кнопку фильтра
+            document.querySelectorAll('.filter-options .btn').forEach(btn => {
+                btn.classList.remove('btn-success');
+            });
+            
+            event.target.classList.add('btn-success');
+        }
+        
+        // Обновление списка планов
+        function updatePlansList() {
+            const plansList = document.getElementById('plans-list');
+            const plansCount = document.getElementById('plans-count');
+            
+            if (plans.length === 0) {
+                plansList.innerHTML = `
+                    <div class="empty-plans">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Планов пока нет</h3>
+                        <p>Добавьте первый план, используя форму слева</p>
+                    </div>
+                `;
+                plansCount.textContent = '0';
                 return;
             }
             
-            container.innerHTML = messages.map(msg => `
-                <div class="message" data-id="${msg.id}">
-                    <div class="message-header">
-                        <span class="message-author">${msg.name}</span>
-                        <span class="message-time">${msg.timestamp}</span>
-                    </div>
-                    <p class="message-text">${msg.message}</p>
-                    <div class="message-actions">
-                        <button onclick="likeMessage(${msg.id})" style="background:none; border:none; color:#2575fc; cursor:pointer; padding:5px;">
-                            👍 <span id="likes-${msg.id}">${msg.likes}</span>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // Функция для лайков
-        window.likeMessage = function(id) {
-            const messages = getMessages();
-            const messageIndex = messages.findIndex(msg => msg.id === id);
+            // Сортируем планы: сначала активные, затем по дате создания (новые сверху)
+            const sortedPlans = [...plans].sort((a, b) => {
+                if (a.completed !== b.completed) {
+                    return a.completed ? 1 : -1;
+                }
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
             
-            if (messageIndex !== -1) {
-                messages[messageIndex].likes++;
-                saveMessages(messages);
-                document.getElementById(`likes-${id}`).textContent = messages[messageIndex].likes;
-            }
-        };
-        
-        // Работа с localStorage
-        function getMessages() {
-            const messages = localStorage.getItem(STORAGE_KEY);
-            return messages ? JSON.parse(messages) : [];
-        }
-        
-        function saveMessages(messages) {
-            // Ограничиваем количество сообщений (последние 50)
-            const limitedMessages = messages.slice(0, 50);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(limitedMessages));
-        }
-        
-        // Счетчик онлайн (имитация)
-        function updateOnlineCounter() {
-            // В реальном приложении здесь был бы запрос к серверу
-            const baseCount = 1;
-            const randomAddition = Math.floor(Math.random() * 10);
-            const onlineCount = baseCount + randomAddition;
+            let plansHTML = '';
             
-            document.getElementById('onlineCount').textContent = onlineCount;
+            sortedPlans.forEach(plan => {
+                const priorityText = {
+                    'high': 'Высокий',
+                    'medium': 'Средний',
+                    'low': 'Низкий'
+                };
+                
+                const priorityClass = {
+                    'high': 'priority-high',
+                    'medium': 'priority-medium',
+                    'low': 'priority-low'
+                };
+                
+                const formatDate = (dateString) => {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                };
+                
+                plansHTML += `
+                    <div class="plan-item ${plan.priority === 'high' ? 'high-priority' : ''} ${plan.completed ? 'completed' : ''}">
+                        <div class="plan-header">
+                            <div class="plan-title">${plan.title}</div>
+                            <div class="plan-priority ${priorityClass[plan.priority]}">
+                                ${priorityText[plan.priority]}
+                            </div>
+                        </div>
+                        
+                        <p>${plan.description || 'Нет описания'}</p>
+                        
+                        <div class="plan-dates">
+                            <div><i class="far fa-calendar"></i> Срок: ${formatDate(plan.deadline)}</div>
+                            <div><i class="far fa-clock"></i> Создан: ${formatDate(plan.createdAt)}</div>
+                        </div>
+                        
+                        <div class="plan-author">
+                            <i class="fas fa-user-edit"></i> Автор: ${plan.author}
+                        </div>
+                        
+                        <div class="plan-status ${plan.completed ? 'status-completed' : 'status-active'}">
+                            ${plan.completed ? 'Завершен' : 'Активен'}
+                        </div>
+                        
+                        <div class="plan-actions">
+                            <button class="btn" onclick="togglePlanStatus(${plan.id})">
+                                <i class="fas fa-${plan.completed ? 'undo' : 'check'}"></i> ${plan.completed ? 'Возобновить' : 'Завершить'}
+                            </button>
+                            <button class="btn" onclick="editPlan(${plan.id})">
+                                <i class="fas fa-edit"></i> Редактировать
+                            </button>
+                            <button class="btn btn-warning" onclick="deletePlan(${plan.id})">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            plansList.innerHTML = plansHTML;
+            plansCount.textContent = plans.length;
         }
         
-        // Периодическое обновление сообщений
-        setInterval(loadMessages, 10000);
+        // Показ уведомления
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Имитация обновления в реальном времени (в реальном приложении было бы WebSocket соединение)
+        function simulateRealTimeUpdate() {
+            // В реальном приложении здесь было бы подключение к серверу
+            // для получения обновлений от других пользователей
+            console.log('Изменения сохранены. Другие пользователи увидят обновления.');
+        }
+        
+        // Добавляем несколько тестовых планов при первом запуске
+        if (plans.length === 0) {
+            const testPlans = [
+                {
+                    id: 1,
+                    title: "Завершить проект",
+                    description: "Закончить работу над основным проектом и подготовить финальный отчет",
+                    priority: "high",
+                    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    author: "Алексей",
+                    completed: false,
+                    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 2,
+                    title: "Подготовить презентацию",
+                    description: "Создать презентацию для еженедельного совещания команды",
+                    priority: "medium",
+                    deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    author: "Мария",
+                    completed: false,
+                    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 3,
+                    title: "Обновить документацию",
+                    description: "Дописать раздел API в документации проекта",
+                    priority: "low",
+                    deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    author: "Иван",
+                    completed: true,
+                    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+                }
+            ];
+            
+            plans = testPlans;
+            localStorage.setItem('plans', JSON.stringify(plans));
+            updatePlansList();
+        }
     </script>
 </body>
 </html>
