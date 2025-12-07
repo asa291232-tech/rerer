@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой сайт для общения</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2575fc;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-section, .messages-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #2575fc;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2575fc;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+        }
+        
+        .message {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border-left: 5px solid #2575fc;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-author {
+            font-weight: bold;
+            color: #2575fc;
+        }
+        
+        .message-time {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .message-text {
+            color: #333;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .online-counter {
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 Добро пожаловать!</h1>
+            <p class="subtitle">Общайтесь, делитесь мыслями и находите новых друзей</p>
+        </header>
+        
+        <div class="main-content">
+            <section class="form-section">
+                <h2>✍️ Отправить сообщение</h2>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя:</label>
+                        <input type="text" id="name" placeholder="Введите ваше имя" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Ваш email:</label>
+                        <input type="email" id="email" placeholder="example@mail.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Сообщение:</label>
+                        <textarea id="message" rows="5" placeholder="Напишите ваше сообщение здесь..." required></textarea>
+                    </div>
+                    
+                    <button type="submit">Отправить сообщение</button>
+                </form>
+            </section>
+            
+            <section class="messages-section">
+                <h2>💬 Последние сообщения</h2>
+                <div id="messagesContainer">
+                    <!-- Сообщения будут добавляться здесь -->
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>© 2024 Мой сайт для общения. Все права защищены.</p>
+            <div class="online-counter">
+                👥 Сейчас онлайн: <span id="onlineCount">1</span> человек
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Имитация базы данных в localStorage
+        const STORAGE_KEY = 'site_messages';
+        
+        // Загружаем сообщения при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMessages();
+            updateOnlineCounter();
+            
+            // Обновляем счетчик каждые 30 секунд
+            setInterval(updateOnlineCounter, 30000);
+        });
+        
+        // Обработка формы
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            if (name && email && message) {
+                addMessage(name, email, message);
+                
+                // Очищаем форму
+                document.getElementById('messageForm').reset();
+                
+                // Показываем уведомление
+                alert('Сообщение успешно отправлено!');
+            }
+        });
+        
+        // Функция добавления сообщения
+        function addMessage(name, email, message) {
+            const messages = getMessages();
+            const newMessage = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                message: message,
+                timestamp: new Date().toLocaleString('ru-RU'),
+                likes: 0
+            };
+            
+            messages.unshift(newMessage); // Добавляем в начало
+            saveMessages(messages);
+            displayMessages();
+        }
+        
+        // Функция загрузки сообщений
+        function loadMessages() {
+            displayMessages();
+        }
+        
+        // Функция отображения сообщений
+        function displayMessages() {
+            const messages = getMessages();
+            const container = document.getElementById('messagesContainer');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="message"><p>Пока нет сообщений. Будьте первым!</p></div>';
+                return;
+            }
+            
+            container.innerHTML = messages.map(msg => `
+                <div class="message" data-id="${msg.id}">
+                    <div class="message-header">
+                        <span class="message-author">${msg.name}</span>
+                        <span class="message-time">${msg.timestamp}</span>
+                    </div>
+                    <p class="message-text">${msg.message}</p>
+                    <div class="message-actions">
+                        <button onclick="likeMessage(${msg.id})" style="background:none; border:none; color:#2575fc; cursor:pointer; padding:5px;">
+                            👍 <span id="likes-${msg.id}">${msg.likes}</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Функция для лайков
+        window.likeMessage = function(id) {
+            const messages = getMessages();
+            const messageIndex = messages.findIndex(msg => msg.id === id);
+            
+            if (messageIndex !== -1) {
+                messages[messageIndex].likes++;
+                saveMessages(messages);
+                document.getElementById(`likes-${id}`).textContent = messages[messageIndex].likes;
+            }
+        };
+        
+        // Работа с localStorage
+        function getMessages() {
+            const messages = localStorage.getItem(STORAGE_KEY);
+            return messages ? JSON.parse(messages) : [];
+        }
+        
+        function saveMessages(messages) {
+            // Ограничиваем количество сообщений (последние 50)
+            const limitedMessages = messages.slice(0, 50);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(limitedMessages));
+        }
+        
+        // Счетчик онлайн (имитация)
+        function updateOnlineCounter() {
+            // В реальном приложении здесь был бы запрос к серверу
+            const baseCount = 1;
+            const randomAddition = Math.floor(Math.random() * 10);
+            const onlineCount = baseCount + randomAddition;
+            
+            document.getElementById('onlineCount').textContent = onlineCount;
+        }
+        
+        // Периодическое обновление сообщений
+        setInterval(loadMessages, 10000);
+    </script>
+</body>
+</html>
